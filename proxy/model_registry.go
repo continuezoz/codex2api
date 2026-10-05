@@ -256,7 +256,15 @@ func mergeModelInfos(rows []database.ModelRegistryRow) []ModelInfo {
 		}
 		byID[info.ID] = info
 	}
-
+	
+	for _, builtin := range builtinModelInfos {
+		if !builtin.APIKeyAuthAvailable {
+			info := byID[builtin.ID]
+			info.APIKeyAuthAvailable = false
+			byID[builtin.ID] = info
+		}
+	}
+	
 	builtins := make([]ModelInfo, 0, len(builtinModelInfos))
 	for _, info := range builtinModelInfos {
 		if merged, ok := byID[info.ID]; ok {
